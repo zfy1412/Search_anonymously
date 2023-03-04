@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="csrf-token" content="vXqNKnW2bbvLKBhahgFJNeE4f6ZkUNOzjRP0PGb1">
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js">
+    </script>
+    <title>
+        风险等级
+    </title>
+    <link href="views/CSS/animate.css" rel="stylesheet" type="text/css">
+    <style>
+        /*:root {*/
+        /*    --main-color: #FFA500*/
+        /*}*/
+
+        @-webkit-keyframes pulse {
+            50% {
+                -webkit-transform: scale3d(1.2, 1.2, 1.2);
+                transform: scale3d(1.2, 1.2, 1.2);
+            }
+        }
+
+        @keyframes pulse {
+            50% {
+                -webkit-transform: scale3d(1.2, 1.2, 1.2);
+                transform: scale3d(1.2, 1.2, 1.2);
+            }
+        }
+
+        .list-group {
+            padding: 1em;
+        }
+
+        .list-group-item {
+            font-size: 1.1em;
+            padding: 0.1em;
+            border: 0px;
+        }
+
+        .STYLE1 {
+            font-size: 20px
+        }
+
+        .STYLE2 {
+            color: #666666
+        }
+
+        input {
+            background-color: transparent;
+            border: none;
+            outline: none;
+            color: inherit;
+            font-weight: inherit;
+            text-align: inherit;
+        }
+
+        .textInp {
+            width: 100%;
+            color: #fff !important;
+            font-weight: 700 !important;
+            margin: 0;
+            padding: 0;
+        }
+
+        .shield {
+            height: 300px;
+        }
+    </style>
+
+</head>
+
+<body>
+<div id="app">
+    <div class="card border-0 text-center" style="color:#FFA500">
+        <div class="card-body">
+            <h2 class="card-title" style="font-size: 1.8em;">您当前的风险等级</h2>
+
+            <i class="animated infinite pulse fa p-4">
+                <div class="box">
+
+                    <img contenteditable="false" class="shield" src='views/IMG/shield.png'>
+                </div>
+            </i>
+
+            <p id="time-text" class="card-text" ondblclick="getTime()" style="font-size: 1.4em;">
+                时间：2020-09-26 15:40:59 </p>
+            <p class="card-text" id="tip" style="font-size: 1.4em;" contenteditable="true">居家隔离</p>
+
+            <p class="card-text" style="font-size: 1.4em;"></p>
+        </div>
+    </div>
+    <ul class="list-group list-group-flush" style="background-color:#FFA500">
+        <li class="list-group-item bg-transparent d-flex text-white font-weight-bold">
+
+
+        </li>
+    </ul>
+</div>
+
+</div>
+<script>
+    function getTime() {
+        var time = new Date();
+        document.getElementById('time-text').innerHTML = "时间：" + time.getFullYear() + "-" + (time.getMonth() + 1) +
+            "-" + (time.getDate() < 10 ? ('0' + time.getDate()) : time.getDate()) + " " + time.toTimeString()
+                .substr(0, 9)
+    }
+    getTime();
+    // $.ajax({
+    //     type: "POST",
+    //     url: '/PostServlet',
+    //     headers: {
+    //         'x-token': 'token'
+    //     },
+    //
+    //     dataType: 'JSON',
+    //     contentType: 'application/json;charset=utf-8',
+    //     async: false,
+    //     success: function (data) {
+    //         var str = JSON.parse(data);
+    //         if (data == 1) {
+    //             document.documentElement.style.setProperty("--main-color", "#ff0000")
+    //             $("#tip")[0].innerHTML = "需要进行核酸检测!"
+    //         } else if (data == 2) {
+    //             document.documentElement.style.setProperty("--main-color", "#FFA500")
+    //             $("#tip")[0].innerHTML = "居家隔离"
+    //         } else {
+    //             document.documentElement.style.setProperty("--main-color", "#07c160")
+    //             $("#tip")[0].innerHTML = "健康出行"
+    //         }
+    //     }
+    // })
+
+
+</script>
+
+</html>
