@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"goweb/compute"
 	"goweb/send"
-  "goweb/compute"
 	"net/http"
 )
 
@@ -13,11 +13,11 @@ func main() {
 	r.LoadHTMLGlob(
 		"views/HTML/*",
 	)
-	r.StaticFS("/views",http.Dir("./views"))
+	r.StaticFS("/views", http.Dir("./views"))
 	r.GET("/login", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "Login.html", nil)
 	})
- 	r.GET("/", func(c *gin.Context) {
+	r.GET("/", func(c *gin.Context) {
 		c.Redirect(http.StatusMovedPermanently, "http://127.0.0.1:7995/login")
 	})
 	r.POST("/login", func(c *gin.Context) {
@@ -51,15 +51,15 @@ func main() {
 		fmt.Println(now)
 		fmt.Println(now.Etime)
 		fmt.Println(len(now.Node))
-	  ca := compute.Count(now)
+		ca := compute.Count(now)
 		//c.HTML(http.StatusOK, "state_red.html", nil)
-		if ca=="A"{
+		if ca == "A" {
 			c.JSON(302, gin.H{"location": "http://127.0.0.1:7995/sate1"})
 		}
-		if ca=="B"{
+		if ca == "B" {
 			c.JSON(302, gin.H{"location": "http://127.0.0.1:7995/sate2"})
 		}
-		if ca=="C"{
+		if ca == "C" {
 			c.JSON(302, gin.H{"location": "http://127.0.0.1:7995/sate3"})
 		}
 		//c.JSON(302, gin.H{"location": "http://1.15.146.175:7995/sate1"})
@@ -71,6 +71,16 @@ func main() {
 		//} else {
 		//	//fmt.Println(reqInfo.Data)
 		//}
+	})
+	r.GET("/json", func(c *gin.Context) {
+		data := gin.H{
+			"taxiDriver": "libro",
+			"name":       "hey libro~",
+			"phone":      "18336218165",
+			"ID":         "辽A1FD651",
+		}
+		//这里要返回json格式的数据，所以用c.JSON,这样，数据就返回给请求方了
+		c.JSON(http.StatusOK, data)
 	})
 	r.GET("/sate1", func(c *gin.Context) {
 		//c.JSON(200, gin.H{"data": "1"})
