@@ -12,6 +12,7 @@ body {
     text-align: center;
     background: #00000080;
     padding: 20px 50px;
+    border-radius: 15px;
 }
 
 #login-box h1 {
