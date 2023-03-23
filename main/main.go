@@ -9,6 +9,7 @@ import (
 )
 
 func main() {
+
 	r := gin.Default()
 	r.LoadHTMLGlob(
 		"views/HTML/*",
@@ -73,11 +74,20 @@ func main() {
 		//}
 	})
 	r.GET("/json", func(c *gin.Context) {
-		data := gin.H{
+		data1 := gin.H{
 			"taxiDriver": "libro",
-			"name":       "hey libro~",
 			"phone":      "18336218165",
 			"ID":         "辽A1FD651",
+		}
+		data2 := gin.H{
+			"taxiDriver": "libro",
+			"phone":      "18336218165",
+			"ID":         "辽A1FD651",
+		}
+		data := gin.H{
+			"length": "2",
+			"data1":  data1,
+			"data2":  data2,
 		}
 		//这里要返回json格式的数据，所以用c.JSON,这样，数据就返回给请求方了
 		c.JSON(http.StatusOK, data)
