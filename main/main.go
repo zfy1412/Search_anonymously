@@ -88,6 +88,7 @@ func main() {
 			"length": "2",
 			"data1":  data1,
 			"data2":  data2,
+			"data3":  nil,
 		}
 		//这里要返回json格式的数据，所以用c.JSON,这样，数据就返回给请求方了
 		c.JSON(http.StatusOK, data)
