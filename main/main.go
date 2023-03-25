@@ -93,24 +93,14 @@ func main() {
 		//这里要返回json格式的数据，所以用c.JSON,这样，数据就返回给请求方了
 		c.JSON(http.StatusOK, data)
 	})
-	r.GET("/sate1", func(c *gin.Context) {
-		//c.JSON(200, gin.H{"data": "1"})
-		c.HTML(http.StatusOK, "state_red.html", nil)
 
-	})
-	r.POST("/sate1", func(c *gin.Context) {
-		//c.JSON(200, gin.H{"data": "1"})
-		c.HTML(http.StatusOK, "state_red.html", nil)
-
-	})
-	r.GET("/sate2", func(c *gin.Context) {
-		//c.JSON(200, gin.H{"data": "1"})
-		c.HTML(http.StatusOK, "state_yellow.html", nil)
-
-	})
 	r.GET("/sate3", func(c *gin.Context) {
 		//c.JSON(200, gin.H{"data": "1"})
 		c.HTML(http.StatusOK, "state_green.html", nil)
+
+	})
+	r.GET("/register", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "register.html", nil)
 
 	})
 
