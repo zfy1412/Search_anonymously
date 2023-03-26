@@ -15,6 +15,18 @@ type Trajectory struct {
 	X   float64 `json:"x"`
 	Y   float64 `json:"y"`
 }
+type Link struct {
+	Id        int    `json:"id"`
+	Uid       string `json:"uid"`
+	Tid       int    `json:"tid"`
+	Starttime string `json:"starttime"`
+	Endtime   string `json:"endtime"`
+}
+type Driver struct {
+	Uid   string `json:"id"`
+	Name  string `json:"name"`
+	Phone string `json:"phone"`
+}
 type Date struct {
 	Stime string `json:"stime"`
 	Etime string `json:"etime"`

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"goweb/send"
 	"math"
+	"sort"
 	"time"
 )
 
@@ -87,7 +88,7 @@ func area(n int, p point) int {
 	)
 	var f int
 	f = 0
-	m = 3
+	m = 80
 	e = 0.000005
 	for i := 0; i < n; i++ {
 		for j := 0; j < m; j++ {
@@ -214,7 +215,7 @@ func parse_timestr_to_datetime(time_str string) time.Time {
 	return t
 }
 
-func Count(now send.Date) []int {
+func Count(now send.Date) []string {
 	m = 6
 
 	patient.year[0] = 2021
@@ -227,34 +228,6 @@ func Count(now send.Date) []int {
 	patient.day[1] = 21
 	patient.hour[1] = 19
 	patient.minute[1] = 10
-
-	patient.x1[0] = 123.2129595734752
-	patient.x2[0] = 41.78309663475781
-
-	//0
-
-	patient.x1[1] = 123.12269783583262
-	patient.x2[1] = 41.7482309133674
-
-	//1
-
-	patient.x1[2] = 123.0623317055621
-	patient.x2[2] = 41.71506925799191
-
-	//2
-
-	patient.x1[3] = 123.017488294504
-	patient.x2[3] = 41.684907331316374
-
-	//3
-
-	patient.x1[4] = 122.96459606607651
-	patient.x2[4] = 41.657318239829706
-
-	//4
-
-	patient.x1[5] = 122.96459606607651
-	patient.x2[5] = 41.657318239829706
 
 	//5
 
@@ -284,8 +257,9 @@ func Count(now send.Date) []int {
 		p.x1[i] = now.Node[i].X
 		p.x2[i] = now.Node[i].Y
 	}
-	cnt := 10
-	for cnt >= 0 {
+	cnt := 1
+	var dict = make(map[string]int, 10)
+	for cnt <= 1 {
 		var db *sql.DB
 		var err error
 		db, err = sql.Open("mysql", "root:1592933843zzz@tcp(127.0.0.1:3306)/sql_find")
@@ -293,20 +267,79 @@ func Count(now send.Date) []int {
 		if err != nil {
 			fmt.Printf("connect to db 127.0.0.1:3306 error: %v\n", err)
 		}
-		sqlStr := "select id, x, y from user where id > ?"
-		rows, err := db.Query(sqlStr, 0)
+		sqlStr := "select id, x, y from trajectory where tid = ?"
+		rows, err := db.Query(sqlStr, cnt)
+		i := 0
+		defer rows.Close()
+		for rows.Next() {
+			var u send.Trajectory
+			err := rows.Scan(&u.Id, &u.X, &u.Y)
+			fmt.Println(u.Tid)
+			if err != nil {
+				fmt.Printf("scan failed, err:%v\n", err)
+			}
+			patient.x1[i] = u.X
+			patient.x2[i] = u.Y
+			i++
+		}
+
+		var name string
+		sqlStr = "select uid, starttime, endtime from link where tid = ?"
+		rows, err = db.Query(sqlStr, cnt)
+		defer rows.Close()
+		for rows.Next() {
+			var u send.Link
+			err := rows.Scan(&u.Uid, &u.Starttime, &u.Endtime)
+			if err != nil {
+				fmt.Printf("scan failed, err:%v\n", err)
+			}
+			st := parse_timestr_to_datetime(u.Starttime)
+			ed := parse_timestr_to_datetime(u.Endtime)
+			patient.year[0] = st.Year()
+			patient.month[0] = int(st.Month())
+			patient.day[0] = st.Day()
+			patient.hour[0] = st.Hour()
+			patient.minute[0] = st.Minute()
+			patient.year[1] = ed.Year()
+			patient.month[1] = int(ed.Month())
+			patient.day[1] = ed.Day()
+			patient.hour[1] = ed.Hour()
+			patient.minute[1] = ed.Minute()
+			name = u.Uid
+		}
 		var fen int
 		fen = 0
 		fen = timejudgef(n, p)
 		if fen >= 0 {
-			//fen=distance(n,p)+area(n,p)
 			fen = distance(n, p) + (timejudge(n, p) / 2) + area(n, p)/100
 			//fen = distance(n, p)
 			//return judge(fen)
-		} else {
-			//return "C"
 		}
+		dict[name] = fen
+		cnt++
 	}
+	type peroson struct {
+		Name string
+		Fun  int
+	}
+
+	var lstPerson []peroson
+	for k, v := range dict {
+		lstPerson = append(lstPerson, peroson{k, v})
+	}
+
+	sort.Slice(lstPerson, func(i, j int) bool {
+		return lstPerson[i].Fun < lstPerson[j].Fun // 升序
+	})
+	var ans []string
+	if len(lstPerson) >= 3 {
+		ans = append(ans, lstPerson[0].Name, lstPerson[1].Name, lstPerson[2].Name)
+	} else if len(lstPerson) == 2 {
+		ans = append(ans, lstPerson[0].Name, lstPerson[1].Name)
+	} else {
+		ans = append(ans, lstPerson[0].Name)
+	}
+	return ans
 
 	//fmt.Printf("%d",fen)
 }

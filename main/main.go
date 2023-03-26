@@ -1,14 +1,16 @@
 package main
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"goweb/compute"
 	"goweb/send"
 	"net/http"
 )
 
 func main() {
-
+	ans := []string{}
 	r := gin.Default()
 	r.LoadHTMLGlob(
 		"views/HTML/*",
@@ -51,7 +53,7 @@ func main() {
 		fmt.Println(now)
 		fmt.Println(now.Etime)
 		fmt.Println(len(now.Node))
-		//ca := compute.Count(now)
+		ans = compute.Count(now)
 		//c.HTML(http.StatusOK, "state_red.html", nil)
 		c.JSON(302, gin.H{"location": "http://127.0.0.1:7995/sate3"})
 
@@ -66,24 +68,112 @@ func main() {
 		//}
 	})
 	r.GET("/json", func(c *gin.Context) {
+		var db *sql.DB
+		var err error
+		db, err = sql.Open("mysql", "root:1592933843zzz@tcp(127.0.0.1:3306)/sql_find")
+
+		if err != nil {
+			fmt.Printf("connect to db 127.0.0.1:3306 error: %v\n", err)
+		}
+
+		length := len(ans)
+		i := 0
+		var d1 send.Driver
+		var d2 send.Driver
+		var d3 send.Driver
+		for i < length {
+			if i == 0 {
+				d1.Uid = ans[0]
+				sqlStr := "select id, name, phone from driver where id = ?"
+				rows, err := db.Query(sqlStr, d1.Uid)
+				if err != nil {
+					fmt.Printf("query failed, err:%v\n", err)
+				}
+				defer rows.Close()
+				for rows.Next() {
+					err := rows.Scan(&d1.Uid, &d1.Name, &d1.Phone)
+					if err != nil {
+						fmt.Printf("scan failed, err:%v\n", err)
+					}
+				}
+
+				i++
+			} else if i == 1 {
+				d2.Uid = ans[1]
+				sqlStr := "select id, name, phone from driver where id = ?"
+				rows, err := db.Query(sqlStr, d2.Uid)
+				if err != nil {
+					fmt.Printf("query failed, err:%v\n", err)
+				}
+				defer rows.Close()
+				for rows.Next() {
+					err := rows.Scan(&d2.Uid, &d2.Name, &d2.Phone)
+					if err != nil {
+						fmt.Printf("scan failed, err:%v\n", err)
+					}
+				}
+
+				i++
+			} else if i == 2 {
+				d3.Uid = ans[2]
+				sqlStr := "select id, name, phone from driver where id = ?"
+				rows, err := db.Query(sqlStr, d3.Uid)
+				if err != nil {
+					fmt.Printf("query failed, err:%v\n", err)
+				}
+				defer rows.Close()
+				for rows.Next() {
+					err := rows.Scan(&d3.Uid, &d3.Name, &d3.Phone)
+					if err != nil {
+						fmt.Printf("scan failed, err:%v\n", err)
+					}
+				}
+
+				i++
+			}
+		}
+
 		data1 := gin.H{
-			"taxiDriver": "libro",
-			"phone":      "18336218165",
-			"ID":         "辽A1FD651",
+			"taxiDriver": d1.Name,
+			"phone":      d1.Phone,
+			"ID":         d1.Uid,
 		}
 		data2 := gin.H{
-			"taxiDriver": "hhh",
-			"phone":      "11111111",
-			"ID":         "辽A1Fd1we",
+			"taxiDriver": d2.Name,
+			"phone":      d2.Phone,
+			"ID":         d2.Uid,
 		}
-		data := gin.H{
-			"length": "3",
-			"data1":  data1,
-			"data2":  data2,
-			"data3":  nil,
+		data3 := gin.H{
+			"taxiDriver": d3.Name,
+			"phone":      d3.Phone,
+			"ID":         d3.Uid,
 		}
-		//这里要返回json格式的数据，所以用c.JSON,这样，数据就返回给请求方了
-		c.JSON(http.StatusOK, data)
+		if i == 0 {
+			data := gin.H{
+				"length": length,
+				"data1":  data1,
+				"data2":  nil,
+				"data3":  nil,
+			}
+			c.JSON(http.StatusOK, data)
+		} else if i == 1 {
+			data := gin.H{
+				"length": length,
+				"data1":  data1,
+				"data2":  data2,
+				"data3":  nil,
+			}
+			c.JSON(http.StatusOK, data)
+		} else {
+			data := gin.H{
+				"length": length,
+				"data1":  data1,
+				"data2":  data2,
+				"data3":  data3,
+			}
+			c.JSON(http.StatusOK, data)
+		}
+
 	})
 	r.GET("/sate3", func(c *gin.Context) {
 		//c.JSON(200, gin.H{"data": "1"})
@@ -93,6 +183,26 @@ func main() {
 	r.GET("/register", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "register.html", nil)
 
+	})
+	r.POST("/register", func(c *gin.Context) {
+		id := c.PostForm("idnumber")
+		username := c.PostForm("username")
+		password := c.PostForm("password")
+		user := &send.User{
+			Id:       id,
+			Name:     username,
+			Password: password,
+		}
+		db, err := sql.Open("mysql", "root:1592933843zzz@tcp(127.0.0.1:3306)/sql_find")
+
+		if err != nil {
+			fmt.Printf("connect to db 127.0.0.1:3306 error: %v\n", err)
+		}
+		sqlStr := "insert into user(id, password,name) values(?,?,?)"
+		_, errr := db.Exec(sqlStr, user.Id, user.Password, user.Name)
+		if errr != nil {
+			fmt.Println("插入数据错误", err)
+		}
 	})
 	//r.POST("/register", func(c *gin.Context) {
 	//	id := c.PostForm("id")
