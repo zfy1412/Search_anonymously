@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="views/CSS/login.css">
+  <link rel="stylesheet" href="views/CSS/font-awesome.css">
+  <!-- <script type="text/javascript" src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=您的密钥"></script> -->
+
+  <!--    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>-->
+  <!--    <script src="../JS/Login1.js"></script>-->
+  <style>
+    input::-webkit-input-placeholder {
+      color: white;
+    }
+
+    input::-moz-placeholder {
+      /* Mozilla Firefox 19+ */
+      color: white;
+    }
+
+    input:-moz-placeholder {
+      /* Mozilla Firefox 4 to 18 */
+      color: white;
+    }
+
+    input:-ms-input-placeholder {
+      /* Internet Explorer 10-11 */
+      color: white;
+    }
+    #login-box{
+      border-radius:20px;
+    }
+  </style>
+</head>
+
+<body>
+
+<form action="" method="POST" id="loginform">
+  <div id="login-box">
+    <h1>register</h1>
+    <div class="form">
+      <div class="item">
+        <i class="fa fa-user-circle" aria-hidden="true"></i>
+        <input type="text" placeholder="username" name="username" required>
+      </div>
+      <div class="item">
+        <i class="fa fa-address-card" aria-hidden="true"></i>
+        <input type="text" placeholder="idnumber" name="idnumber" pattern="^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$"
+               title="身份证号码">
+      </div>
+      <div class="item">
+        <i class="fa fa-key" aria-hidden="true"></i>
+        <input type="password" placeholder="password" name="password"
+               pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$" title="密码 包含大小写字母和数字的组合，不能使用特殊字符，长度在8-10之间
+                    ">
+      </div>
+    </div>
+    <button type="submit" id="btn"  >提交</button>
+  </div>
+</form>
+
+
+</body>
+</html>
