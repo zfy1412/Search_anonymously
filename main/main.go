@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"goweb/compute"
 	"goweb/send"
 	"net/http"
 )
@@ -52,17 +51,10 @@ func main() {
 		fmt.Println(now)
 		fmt.Println(now.Etime)
 		fmt.Println(len(now.Node))
-		ca := compute.Count(now)
+		//ca := compute.Count(now)
 		//c.HTML(http.StatusOK, "state_red.html", nil)
-		if ca == "A" {
-			c.JSON(302, gin.H{"location": "http://127.0.0.1:7995/sate1"})
-		}
-		if ca == "B" {
-			c.JSON(302, gin.H{"location": "http://127.0.0.1:7995/sate2"})
-		}
-		if ca == "C" {
-			c.JSON(302, gin.H{"location": "http://127.0.0.1:7995/sate3"})
-		}
+		c.JSON(302, gin.H{"location": "http://127.0.0.1:7995/sate3"})
+
 		//c.JSON(302, gin.H{"location": "http://1.15.146.175:7995/sate1"})
 		//c.Redirect(302, "http://10.0.4.15:7995/sate1")
 		//if err != nil {
@@ -92,21 +84,6 @@ func main() {
 		}
 		//这里要返回json格式的数据，所以用c.JSON,这样，数据就返回给请求方了
 		c.JSON(http.StatusOK, data)
-	})
-	r.GET("/sate1", func(c *gin.Context) {
-		//c.JSON(200, gin.H{"data": "1"})
-		c.HTML(http.StatusOK, "state_red.html", nil)
-
-	})
-	r.POST("/sate1", func(c *gin.Context) {
-		//c.JSON(200, gin.H{"data": "1"})
-		c.HTML(http.StatusOK, "state_red.html", nil)
-
-	})
-	r.GET("/sate2", func(c *gin.Context) {
-		//c.JSON(200, gin.H{"data": "1"})
-		c.HTML(http.StatusOK, "state_yellow.html", nil)
-
 	})
 	r.GET("/sate3", func(c *gin.Context) {
 		//c.JSON(200, gin.H{"data": "1"})
