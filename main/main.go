@@ -90,7 +90,10 @@ func main() {
 		c.HTML(http.StatusOK, "state_green.html", nil)
 
 	})
+	r.GET("/register", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "register.html", nil)
 
+	})
 	//r.POST("/register", func(c *gin.Context) {
 	//	id := c.PostForm("id")
 	//	username := c.PostForm("username")
