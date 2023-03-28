@@ -4,14 +4,39 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Document</title>
-    <link rel="stylesheet" href="views/CSS/login.css">
+    <title>寻匿登录界面</title>
     <link rel="stylesheet" href="views/CSS/font-awesome.css">
     <!-- <script type="text/javascript" src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=您的密钥"></script> -->
 
-<!--    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>-->
-<!--    <script src="../JS/Login1.js"></script>-->
+    <!--    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>-->
+    <!--    <script src="../JS/Login1.js"></script>-->
     <style>
+
+        #login-box .form .item input[placeholder] {
+            color: white;
+        }
+
+        #login-box p {
+            color: white;
+            font-size: x-large;
+            font-weight: bold;
+        }
+
+        #login-box .form .item input {
+            width: 180px;
+            font-size: 18px;
+            border: 0;
+            border-bottom: 3px solid white;
+            padding: 5px 10px;
+            background: #ffffff00;
+            color: #ffffff;
+        }
+
+        #login-box .form .item i {
+            font-size: 18px;
+            color: white;
+        }
+
         input::-webkit-input-placeholder {
             color: white;
         }
@@ -30,38 +55,129 @@
             /* Internet Explorer 10-11 */
             color: white;
         }
-        #login-box{
-            border-radius:20px;
+
+        #login-box button {
+            border: 0;
+            margin-top: 15px;
+            width: 125px;
+            height: 30px;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            background-image: linear-gradient(to right, darkblue 0%, antiquewhite 100%);
+            border-radius: 15px;
+        }
+
+
+        #login-box {
+            width: 20%;
+            height: auto;
+            background: #00000005;
+            padding: 20px 50px;
+            border-radius: 15px;
+            position: fixed;
+            top: 10%;
+            right: 20%;
+        }
+
+
+        body {
+            background-color: white;
+            background-image: url("views/IMG/bg.jpg");
+            background-size: cover;
+        }
+
+
+        .slideshow {
+            width: 30%;
+            height: 0;
+            padding-bottom: 40%;
+            overflow: hidden;
+            position: fixed;
+            left: 20%;
+            top: 15%;
+            border-radius: 15px;
+        }
+
+        .slideshow-image {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            display: none;
+            border-radius: 15px;
+        }
+
+        .slideshow-image.active {
+            display: block;
+        }
+
+
+        .slideshow-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            color: white;
+            font-size: 24px;
+        }
+
+        .prev {
+            left: 20px;
+        }
+
+        .next {
+            right: 20px;
+        }
+
+        h1 {
+            padding: 10px;
+            background: transparent;
+            font-size: large;
+            color: whitesmoke;
+            text-align: center;
+            margin-top: auto;
+            font-size: xx-large;
+            font-family: 宋体;
         }
     </style>
 </head>
 
 <body>
-    
-    <form action="" method="POST" id="loginform">
-        <div id="login-box">
-            <h1>Login</h1>
-            <div class="form">
-                <div class="item">
-                    <i class="fa fa-user-circle" aria-hidden="true"></i>
-                    <input type="text" placeholder="username" name="username" required>
-                </div>
-                <div class="item">
-                    <i class="fa fa-address-card" aria-hidden="true"></i>
-                    <input type="text" placeholder="idnumber" name="idnumber" pattern="^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$"
-                        title="身份证号码">
-                </div>
-                <div class="item">
-                    <i class="fa fa-key" aria-hidden="true"></i>
-                    <input type="password" placeholder="password" name="password"
-                        pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$" title="密码 包含大小写字母和数字的组合，不能使用特殊字符，长度在8-10之间
-                    ">
-                </div>
+<h1>寻匿--面向隐私保护的出租车寻物平台</h1>
+<form action="" method="POST" id="loginform">
+    <div id="login-box">
+        <p>Login</p>
+        <div class="form">
+            <div class="item">
+                <i class="fa fa-user-circle" aria-hidden="true"></i>
+                <input type="text" placeholder="username" name="username" required>
             </div>
-            <button onclick="redirectToPage()">注册</button>
-            <button type="submit" id="btn"  >登录</button>
+            <div class="item">
+                <i class="fa fa-address-card" aria-hidden="true"></i>
+                <input type="text" placeholder="idnumber" name="idnumber"
+                       pattern="^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$"
+                       title="身份证号码">
+            </div>
+            <div class="item">
+                <i class="fa fa-key" aria-hidden="true"></i>
+                <input type="password" placeholder="password" name="password"
+                       pattern="^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,10}$" title="密码 包含大小写字母和数字的组合，不能使用特殊字符，长度在8-10之间
+                    ">
+            </div>
         </div>
-    </form>
+        <button onclick="redirectToPage()">注册</button>
+        <button type="submit" id="btn">登录</button>
+    </div>
+</form>
+<div class="slideshow">
+    <img class="slideshow-image active" src="views/IMG/title1.JPG">
+    <img class="slideshow-image" src="image2.jpg">
+    <img class="slideshow-image" src="image3.jpg">
+    <button class="slideshow-button prev">Prev</button>
+    <button class="slideshow-button next">Next</button>
+</div>
 
 
 </body>
@@ -69,11 +185,28 @@
     function redirectToPage() {
         window.location.href = "http://127.0.0.1:7995/register";
     }
+
+    let slideIndex = 0;
+
+    const showSlide = (n) => {
+        const slides = document.getElementsByClassName("slideshow-image");
+        if (n >= slides.length) slideIndex = 0;
+        if (n < 0) slideIndex = slides.length - 1;
+
+        for (let i = 0; i < slides.length; i++) {
+            slides[i].classList.remove("active");
+        }
+        slides[slideIndex].classList.add("active");
+    }
+
+    document.querySelector(".prev").addEventListener("click", () => {
+        showSlide(--slideIndex);
+    });
+
+    document.querySelector(".next").addEventListener("click", () => {
+        showSlide(++slideIndex);
+    });
 </script>
-
-
-
-
 
 
 </html>
