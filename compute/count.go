@@ -259,7 +259,7 @@ func Count(now send.Date) []string {
 	}
 	cnt := 1
 	var dict = make(map[string]int, 10)
-	for cnt <= 1 {
+	for cnt <= 4 {
 		var db *sql.DB
 		var err error
 		db, err = sql.Open("mysql", "root:1592933843zzz@tcp(127.0.0.1:3306)/sql_find")
@@ -314,8 +314,13 @@ func Count(now send.Date) []string {
 			fen = distance(n, p) + (timejudge(n, p) / 2) + area(n, p)/100
 			//fen = distance(n, p)
 			//return judge(fen)
+			fmt.Println("fen")
+			fmt.Println(fen)
+			if fen != 0 {
+				dict[name] = fen
+			}
+
 		}
-		dict[name] = fen
 		cnt++
 	}
 	type peroson struct {
@@ -329,13 +334,23 @@ func Count(now send.Date) []string {
 	}
 
 	sort.Slice(lstPerson, func(i, j int) bool {
-		return lstPerson[i].Fun < lstPerson[j].Fun // 升序
+		return lstPerson[i].Fun > lstPerson[j].Fun // 升序
 	})
 	var ans []string
 	if len(lstPerson) >= 3 {
-		ans = append(ans, lstPerson[0].Name, lstPerson[1].Name, lstPerson[2].Name)
+		if lstPerson[0].Fun-lstPerson[1].Fun > 40 {
+			ans = append(ans, lstPerson[0].Name)
+		} else if lstPerson[1].Fun-lstPerson[2].Fun > 40 {
+			ans = append(ans, lstPerson[0].Name, lstPerson[1].Name)
+		} else {
+			ans = append(ans, lstPerson[0].Name, lstPerson[1].Name, lstPerson[2].Name)
+		}
 	} else if len(lstPerson) == 2 {
-		ans = append(ans, lstPerson[0].Name, lstPerson[1].Name)
+		if lstPerson[0].Fun-lstPerson[1].Fun > 40 {
+			ans = append(ans, lstPerson[0].Name)
+		} else {
+			ans = append(ans, lstPerson[0].Name, lstPerson[1].Name)
+		}
 	} else {
 		ans = append(ans, lstPerson[0].Name)
 	}

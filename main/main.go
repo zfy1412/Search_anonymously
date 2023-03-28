@@ -10,6 +10,7 @@ import (
 )
 
 func main() {
+	//encryption.Test_homomorphicCrypto()
 	ans := []string{}
 	r := gin.Default()
 	r.LoadHTMLGlob(
@@ -203,6 +204,7 @@ func main() {
 		if errr != nil {
 			fmt.Println("插入数据错误", err)
 		}
+		c.Redirect(http.StatusMovedPermanently, "http://127.0.0.1:7995/login")
 	})
 	//r.POST("/register", func(c *gin.Context) {
 	//	id := c.PostForm("id")
