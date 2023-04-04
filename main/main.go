@@ -21,7 +21,7 @@ func main() {
 		c.HTML(http.StatusOK, "Login.html", nil)
 	})
 	r.GET("/", func(c *gin.Context) {
-		c.Redirect(http.StatusMovedPermanently, "http://127.0.0.1:7995/login")
+		c.Redirect(http.StatusMovedPermanently, "/login")
 	})
 	r.POST("/login", func(c *gin.Context) {
 		id := c.PostForm("idnumber")
@@ -37,11 +37,11 @@ func main() {
 			key, _ := send.GenerateToken(*user)
 			fmt.Println(key)
 			//c.JSON(http.StatusOK, gin.H{"token": key})
-			c.Redirect(http.StatusMovedPermanently, "http://127.0.0.1:7995/map")
+			c.Redirect(http.StatusMovedPermanently, "/map")
 		} else {
 			//send.Insert(id,username,password)
 			//c.JSON(http.StatusOK, gin.H{"token": nil})
-			c.Redirect(http.StatusMovedPermanently, "http://127.0.0.1:7995/login")
+			c.Redirect(http.StatusMovedPermanently, "/login")
 		}
 	})
 	r.GET("/map", func(c *gin.Context) {
@@ -56,7 +56,7 @@ func main() {
 		fmt.Println(len(now.Node))
 		ans = compute.Count(now)
 		//c.HTML(http.StatusOK, "state_red.html", nil)
-		c.JSON(302, gin.H{"location": "http://127.0.0.1:7995/sate3"})
+		c.JSON(302, gin.H{"location": "/sate3"})
 
 		//c.JSON(302, gin.H{"location": "http://1.15.146.175:7995/sate1"})
 		//c.Redirect(302, "http://10.0.4.15:7995/sate1")
@@ -204,7 +204,7 @@ func main() {
 		if errr != nil {
 			fmt.Println("插入数据错误", err)
 		}
-		c.Redirect(http.StatusMovedPermanently, "http://127.0.0.1:7995/login")
+		c.Redirect(http.StatusMovedPermanently, "/login")
 	})
 	//r.POST("/register", func(c *gin.Context) {
 	//	id := c.PostForm("id")
@@ -217,5 +217,5 @@ func main() {
 	//		//r.HandleContext(c)
 	//	}
 	//})
-	r.Run("127.0.0.1:7995")
+	r.Run(":80")
 }
