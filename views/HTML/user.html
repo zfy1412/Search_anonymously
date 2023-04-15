@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="views/CSS/font-awesome.css">
+    <title>用户界面示例</title>
+    <style>
+        /* 在这里添加CSS样式 */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        span {
+            color: white;
+            font-family: 楷体;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+        }
+
+        .left-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50%;
+        }
+
+        .right-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 50%;
+        }
+
+        .module {
+            width: 80%;
+            margin: 1%;
+            padding: 1%;
+            border: 1px solid #ccc;
+            text-align: center;
+        }
+
+        .user-info {
+            position: absolute;
+            right: 0%;
+            width: 10%;
+        }
+
+        .user-info-details {
+            display: none;
+            position: relative;
+            left: -60%;
+            top: 100%;
+            width: 150%;
+            background-color: #fff;
+            border-radius: 15px;
+        }
+
+        .map-image {
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            border-radius: 15px;
+        }
+
+        .map-module {
+            border: none;
+            width: 100%;
+            height: auto;
+            position: relative;
+            border-radius: 15px;
+        }
+
+        .map-module:hover .overlay {
+            display: block;
+        }
+
+        .map-module:hover span {
+            display: block;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(128, 128, 128, 0.5);
+            display: none;
+            border-radius: 15px;
+        }
+
+        .map-module span {
+            display: none;
+            color: black;
+            font-weight: bolder;
+            font-size: xx-large;
+            font-family: 楷体;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+
+        /*此处开始信息反馈历史记录模块*/
+        .massageTracer {
+            border-radius: 10px;
+            background-image: linear-gradient(to left,deepskyblue 0%,hotpink 100%);
+        }
+        /*此处开始聊天室模块*/
+        .talkRoom{
+            position: relative;
+            top: 30%;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <div class="left-column">
+        <div class="map-module" onclick="showMap()">
+            <img class="map-image" src="views/IMG/map.png" alt="地图">
+            <div class="overlay"></div>
+            <span>点我绘制行程</span>
+        </div>
+        <div class="massageTracer module" onclick="showMessageHistory()">
+            <span>点我查看自己曾查询过的信息</span>
+            <!-- 在这里添加信息反馈历史记录的内容 -->
+        </div>
+    </div>
+    <div class="right-column">
+        <div class="module talkRoom">
+            <h2>聊天室模块</h2>
+            <button onclick="showChat()">点击进入聊天室</button>
+        </div>
+    </div>
+    <div class="user-info">
+        <i class="fa fa-user-circle" aria-hidden="true"></i>
+        <span><a href="#" onclick="toggleUserInfo()">张三</a></span>
+        <div class="module user-info-details">
+            <p>name:张三</p>
+            <p>Phone:159****1212</p>
+            <button onclick="logOut()">logOut</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // 在这里添加JavaScript代码
+    function toggleUserInfo() {
+        var details = document.querySelector(".user-info-details");
+        if (details.style.display === "block") {
+            details.style.display = "none";
+        } else {
+            details.style.display = "block";
+        }
+    }
+
+    function showMap() {
+        window.location.href = '/map';
+    }
+
+    function showChat() {
+        alert("进入聊天室");
+    }
+    function logOut(){
+        if(confirm("确定登出？")){
+            window.location.href='/login';
+        }
+    }
+    function showMessageHistory(){
+        window.location.href='/messageHistory'
+    }
+</script>
+</body>
+</html>
