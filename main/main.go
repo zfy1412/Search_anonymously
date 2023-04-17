@@ -37,7 +37,7 @@ func main() {
 			key, _ := send.GenerateToken(*user)
 			fmt.Println(key)
 			//c.JSON(http.StatusOK, gin.H{"token": key})
-			c.Redirect(http.StatusMovedPermanently, "/map")
+			c.Redirect(http.StatusMovedPermanently, "/userMain")
 		} else {
 			//send.Insert(id,username,password)
 			//c.JSON(http.StatusOK, gin.H{"token": nil})
@@ -185,6 +185,14 @@ func main() {
 		c.HTML(http.StatusOK, "register.html", nil)
 
 	})
+	r.GET("/userMain", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "user.html", nil)
+
+	})
+	r.GET("/messageHistory", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "messageHistory.html", nil)
+
+	})
 	r.POST("/register", func(c *gin.Context) {
 		id := c.PostForm("idnumber")
 		username := c.PostForm("username")
@@ -217,5 +225,5 @@ func main() {
 	//		//r.HandleContext(c)
 	//	}
 	//})
-	r.Run(":80")
+	r.Run(":8080")
 }

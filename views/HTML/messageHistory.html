@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>司机师傅信息查询历史</title>
+</head>
+<body>
+<h1>司机师傅信息查询历史</h1>
+<div id="records"></div>
+
+<script>
+    // 假设这是从后端获取的数据
+    let data = [
+        {time: "2022-11-01 12:00:00", info: "司机师傅A的信息"},
+        {time: "2022-11-02 13:00:00", info: "司机师傅B的信息"},
+        {time: "2022-11-03 14:00:00", info: "司机师傅C的信息"}
+    ];
+
+    // 获取记录容器元素
+    let recordsContainer = document.getElementById("records");
+
+    // 遍历数据，为每条记录创建一个记录框
+    for (let record of data) {
+        // 创建记录框元素
+        let recordElement = document.createElement("div");
+        recordElement.className = "record";
+        recordElement.innerHTML = `查询时间：${record.time}`;
+
+        // 为记录框添加点击事件监听器
+        recordElement.addEventListener("click", function() {
+            // 向后端发送数据
+            sendDataToBackend(record);
+
+            // 跳转到另一个窗口显示具体信息
+            window.location.href = `details.html?info=${record.info}`;
+        });
+
+        // 将记录框添加到记录容器中
+        recordsContainer.appendChild(recordElement);
+    }
+
+    // 定义向后端发送数据的函数
+    function sendDataToBackend(data) {
+        // 这里可以使用 AJAX 或 Fetch API 等技术向后端发送数据
+        console.log(`发送数据到后端：${JSON.stringify(data)}`);
+    }
+</script>
+</body>
+</html>
