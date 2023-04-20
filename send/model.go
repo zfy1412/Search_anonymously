@@ -32,3 +32,15 @@ type Date struct {
 	Etime string `json:"etime"`
 	Node  []Node `json:"path"`
 }
+
+//to do
+type History struct {
+	Hid  string `json:"hid"`
+	Uid  string `json:"uid"`
+	Did  string `json:"did"`
+	Time string `json:"time"`
+}
+type Jsonhistory struct {
+	Time string `json:"time"`
+	Info Driver `json:"info"`
+}

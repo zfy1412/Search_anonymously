@@ -1,9 +1,7 @@
 package send
 
 import (
-
 	"github.com/gin-gonic/gin"
-
 )
 
 func DataAuthority() gin.HandlerFunc {
@@ -20,7 +18,7 @@ func DataAuthority() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if Ask(claims.User.Id,claims.User.Name,claims.User.Password)==1 {
+		if Ask(claims.User.Name, claims.User.Password) == 1 {
 			//c.JSON(http.StatusBadRequest, gin.H{})
 			c.Abort()
 			return

@@ -7,6 +7,8 @@ import (
 	"goweb/compute"
 	"goweb/send"
 	"net/http"
+	"strconv"
+	"time"
 )
 
 func main() {
@@ -24,19 +26,29 @@ func main() {
 		c.Redirect(http.StatusMovedPermanently, "/login")
 	})
 	r.POST("/login", func(c *gin.Context) {
-		id := c.PostForm("idnumber")
 		username := c.PostForm("username")
 		password := c.PostForm("password")
-		user := &send.User{
-			Id:       id,
-			Name:     username,
-			Password: password,
-		}
-		flag := send.Ask(id, username, password)
+		flag := send.Ask(username, password)
 		if flag == 1 {
-			key, _ := send.GenerateToken(*user)
-			fmt.Println(key)
-			//c.JSON(http.StatusOK, gin.H{"token": key})
+			//key, _ := send.GenerateToken(*user)
+			//fmt.Println(key)
+			var db *sql.DB
+			var err error
+			db, err = sql.Open("mysql", "root:1592933843zzz@tcp(127.0.0.1:3306)/sql_find")
+			if err != nil {
+				fmt.Printf("connect to db 127.0.0.1:3306 error: %v\n", err)
+			}
+			sqlStr := "select uid from user where name = ?"
+			rows, err := db.Query(sqlStr, username)
+			var idd int
+			for rows.Next() {
+				err := rows.Scan(&idd)
+				if err != nil {
+					fmt.Printf("scan failed, err:%v\n", err)
+				}
+			}
+			str := strconv.Itoa(idd)
+			c.SetCookie("name", str, 24*60*60, "/", "localhost", false, true)
 			c.Redirect(http.StatusMovedPermanently, "/userMain")
 		} else {
 			//send.Insert(id,username,password)
@@ -82,10 +94,11 @@ func main() {
 		var d1 send.Driver
 		var d2 send.Driver
 		var d3 send.Driver
+		val, _ := c.Cookie("name")
 		for i < length {
 			if i == 0 {
 				d1.Uid = ans[0]
-				sqlStr := "select id, name, phone from driver where id = ?"
+				sqlStr := "select carid, name, phone from driver where did = ?"
 				rows, err := db.Query(sqlStr, d1.Uid)
 				if err != nil {
 					fmt.Printf("query failed, err:%v\n", err)
@@ -101,7 +114,7 @@ func main() {
 				i++
 			} else if i == 1 {
 				d2.Uid = ans[1]
-				sqlStr := "select id, name, phone from driver where id = ?"
+				sqlStr := "select carid, name, phone from driver where did = ?"
 				rows, err := db.Query(sqlStr, d2.Uid)
 				if err != nil {
 					fmt.Printf("query failed, err:%v\n", err)
@@ -117,7 +130,7 @@ func main() {
 				i++
 			} else if i == 2 {
 				d3.Uid = ans[2]
-				sqlStr := "select id, name, phone from driver where id = ?"
+				sqlStr := "select carid, name, phone from driver where did = ?"
 				rows, err := db.Query(sqlStr, d3.Uid)
 				if err != nil {
 					fmt.Printf("query failed, err:%v\n", err)
@@ -149,23 +162,55 @@ func main() {
 			"phone":      d3.Phone,
 			"ID":         d3.Uid,
 		}
-		if i == 0 {
+		timeStr := time.Now().Format("2006-01-02 15:04:05")
+		if i == 1 {
 			data := gin.H{
 				"length": length,
 				"data1":  data1,
 				"data2":  nil,
 				"data3":  nil,
 			}
+			sqlStr := "insert into history(uid,time ,did) values(?,?,?)"
+			_, errr := db.Exec(sqlStr, val, timeStr, ans[0])
+			if errr != nil {
+				fmt.Println("插入数据错误", err)
+			}
 			c.JSON(http.StatusOK, data)
-		} else if i == 1 {
+		} else if i == 2 {
 			data := gin.H{
 				"length": length,
 				"data1":  data1,
 				"data2":  data2,
 				"data3":  nil,
 			}
+
+			sqlStr := "insert into history(uid,time ,did) values(?,?,?)"
+			_, errr := db.Exec(sqlStr, val, timeStr, ans[0])
+			if errr != nil {
+				fmt.Println("插入数据错误", err)
+			}
+			sqlStr = "insert into history(uid,time ,did) values(?,?,?)"
+			_, errr = db.Exec(sqlStr, val, timeStr, ans[1])
+			if errr != nil {
+				fmt.Println("插入数据错误", err)
+			}
 			c.JSON(http.StatusOK, data)
 		} else {
+			sqlStr := "insert into history(uid,time ,did) values(?,?,?)"
+			_, errr := db.Exec(sqlStr, val, timeStr, ans[0])
+			if errr != nil {
+				fmt.Println("插入数据错误", err)
+			}
+			sqlStr = "insert into history(uid,time ,did) values(?,?,?)"
+			_, errr = db.Exec(sqlStr, val, timeStr, ans[1])
+			if errr != nil {
+				fmt.Println("插入数据错误", err)
+			}
+			sqlStr = "insert into history(uid,time ,did) values(?,?,?)"
+			_, errr = db.Exec(sqlStr, val, timeStr, ans[2])
+			if errr != nil {
+				fmt.Println("插入数据错误", err)
+			}
 			data := gin.H{
 				"length": length,
 				"data1":  data1,
@@ -174,6 +219,44 @@ func main() {
 			}
 			c.JSON(http.StatusOK, data)
 		}
+
+	})
+	r.GET("/historydata", func(c *gin.Context) {
+		var db *sql.DB
+		var err error
+		db, err = sql.Open("mysql", "root:1592933843zzz@tcp(127.0.0.1:3306)/sql_find")
+
+		if err != nil {
+			fmt.Printf("connect to db 127.0.0.1:3306 error: %v\n", err)
+		}
+		var h send.History
+		var j send.Jsonhistory
+		data := []send.Jsonhistory{}
+		val, _ := c.Cookie("name")
+		sqlStr := "select uid,did,time  from history where uid = ?"
+		rows, err := db.Query(sqlStr, val)
+		for rows.Next() {
+			err := rows.Scan(&h.Uid, &h.Did, &h.Time)
+			if err != nil {
+				fmt.Printf("scan failed, err:%v\n", err)
+			}
+			j.Time = h.Time
+			var d send.Driver
+			sqlStr := "select carid,name,phone  from driver where did = ?"
+			rrows, errr := db.Query(sqlStr, h.Did)
+			if errr != nil {
+				fmt.Printf("scan failed, err:%v\n", err)
+			}
+			for rrows.Next() {
+				errr := rrows.Scan(&d.Uid, &d.Name, &d.Phone)
+				if errr != nil {
+					fmt.Printf("scan failed, err:%v\n", errr)
+				}
+			}
+			j.Info = d
+			data = append(data, j)
+		}
+		c.JSON(http.StatusOK, data)
 
 	})
 	r.GET("/sate3", func(c *gin.Context) {
@@ -207,7 +290,7 @@ func main() {
 		if err != nil {
 			fmt.Printf("connect to db 127.0.0.1:3306 error: %v\n", err)
 		}
-		sqlStr := "insert into user(id, password,name) values(?,?,?)"
+		sqlStr := "insert into user(phone, password,name) values(?,?,?)"
 		_, errr := db.Exec(sqlStr, user.Id, user.Password, user.Name)
 		if errr != nil {
 			fmt.Println("插入数据错误", err)

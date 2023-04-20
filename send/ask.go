@@ -6,7 +6,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
-func Ask(xx string, yy string, zz string) int {
+func Ask(yy string, zz string) int {
 	var db *sql.DB
 	var err error
 	db, err = sql.Open("mysql", "root:1592933843zzz@tcp(127.0.0.1:3306)/sql_find")
@@ -15,7 +15,7 @@ func Ask(xx string, yy string, zz string) int {
 		fmt.Printf("connect to db 127.0.0.1:3306 error: %v\n", err)
 		return 0
 	}
-	sqlStr := "select id, name, password from user where id > ?"
+	sqlStr := "select uid, name, password from user where uid > ?"
 	rows, err := db.Query(sqlStr, 0)
 	if err != nil {
 		fmt.Printf("query failed, err:%v\n", err)
@@ -35,10 +35,9 @@ func Ask(xx string, yy string, zz string) int {
 		fmt.Println(u.Id)
 		//x:=strconv.Itoa(u.id)
 		//x := string(u.id)
-		fmt.Println(xx)
 		fmt.Println(u.Name)
 		fmt.Println(u.Password)
-		if xx == u.Id && u.Name == yy && zz == u.Password {
+		if u.Name == yy && zz == u.Password {
 
 			flag = 1
 		}

@@ -218,19 +218,6 @@ func parse_timestr_to_datetime(time_str string) time.Time {
 func Count(now send.Date) []string {
 	m = 6
 
-	patient.year[0] = 2021
-	patient.month[0] = 4
-	patient.day[0] = 21
-	patient.hour[0] = 14
-	patient.minute[0] = 32
-	patient.year[1] = 2021
-	patient.month[1] = 4
-	patient.day[1] = 21
-	patient.hour[1] = 19
-	patient.minute[1] = 10
-
-	//5
-
 	//设定患者轨迹的基本信息
 
 	fmt.Println("请输入您当日所到的地点数")
@@ -284,7 +271,7 @@ func Count(now send.Date) []string {
 		}
 
 		var name string
-		sqlStr = "select uid, starttime, endtime from link where tid = ?"
+		sqlStr = "select did, starttime, endtime from link where tid = ?"
 		rows, err = db.Query(sqlStr, cnt)
 		defer rows.Close()
 		for rows.Next() {
