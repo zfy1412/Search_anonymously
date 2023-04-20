@@ -39,6 +39,7 @@ func main() {
 	r.POST("/login", func(c *gin.Context) {
 		username := c.PostForm("username")
 		password := c.PostForm("password")
+		phone := c.PostForm("phoneNumber")
 		flag := send.Ask(username, password)
 		if flag == 1 {
 			//key, _ := send.GenerateToken(*user)
@@ -61,6 +62,7 @@ func main() {
 			str := strconv.Itoa(idd)
 			c.SetCookie("name", str, 24*60*60, "/", "localhost", false, false)
 			c.SetCookie("username", username, 24*60*60, "/", "localhost", false, false)
+			c.SetCookie("phone", phone, 24*60*60, "/", "localhost", false, false)
 			c.Redirect(http.StatusMovedPermanently, "/userMain")
 		} else {
 			//send.Insert(id,username,password)
