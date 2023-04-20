@@ -4,12 +4,23 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	"goweb/compute"
 	"goweb/send"
 	"net/http"
 	"strconv"
 	"time"
 )
+
+var upgrader = websocket.Upgrader{}
+
+type Message struct {
+	Name    string `json:"name"`
+	Content string `json:"content"`
+}
+
+var clients = make(map[*websocket.Conn]bool)
+var broadcast = make(chan Message)
 
 func main() {
 	//encryption.Test_homomorphicCrypto()
@@ -308,5 +319,43 @@ func main() {
 	//		//r.HandleContext(c)
 	//	}
 	//})
+	r.GET("/chat", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "chat.html", nil)
+	})
+
+	r.GET("/ws", func(c *gin.Context) {
+		conn, err := upgrader.Upgrade(c.Writer, c.Request, nil)
+		if err != nil {
+			panic(err)
+		}
+
+		clients[conn] = true
+
+		for {
+			var message Message
+			err := conn.ReadJSON(&message)
+			if err != nil {
+				delete(clients, conn)
+				break
+			}
+
+			broadcast <- message
+		}
+	})
+
+	go func() {
+		for {
+			message := <-broadcast
+
+			for client := range clients {
+				err := client.WriteJSON(message)
+				if err != nil {
+					client.Close()
+					delete(clients, client)
+				}
+			}
+		}
+	}()
+
 	r.Run(":8080")
 }

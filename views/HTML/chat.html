@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Chat Room</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+<div>
+    <h1>Welcome to the Chat Room</h1>
+    <p>Use the form below to send a message:</p>
+    <form id="chat-form">
+        <input type="text" id="name" placeholder="Your Name" required>
+        <input type="text" id="message" placeholder="Message" required>
+        <button type="submit">Send</button>
+    </form>
+    <div id="chat-messages"></div>
+</div>
+
+<script>
+    const chatForm = document.querySelector('#chat-form');
+    const nameInput = document.querySelector('#name');
+    const messageInput = document.querySelector('#message');
+    const chatMessages = document.querySelector('#chat-messages');
+
+    const socket = new WebSocket('ws://' + window.location.host + '/ws');
+
+    socket.onmessage = function(event) {
+        const message = JSON.parse(event.data);
+
+        const messageElement = document.createElement('div');
+        const messageNameElement = document.createElement('span');
+        const messageContentElement = document.createElement('span');
+
+        messageNameElement.innerText = message.name;
+        messageContentElement.innerText = message.content;
+
+        messageElement.appendChild(messageNameElement);
+        messageElement.appendChild(messageContentElement);
+
+        chatMessages.appendChild(messageElement);
+    }
+
+    chatForm.addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        const name = nameInput.value;
+        const content = messageInput.value;
+
+        const message = { name: name, content: content };
+
+        socket.send(JSON.stringify(message));
+
+        messageInput.value = '';
+    });
+</script>
+</body>
+
+</html>
