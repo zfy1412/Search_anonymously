@@ -59,7 +59,8 @@ func main() {
 				}
 			}
 			str := strconv.Itoa(idd)
-			c.SetCookie("name", str, 24*60*60, "/", "localhost", false, true)
+			c.SetCookie("name", str, 24*60*60, "/", "localhost", false, false)
+			c.SetCookie("username", username, 24*60*60, "/", "localhost", false, false)
 			c.Redirect(http.StatusMovedPermanently, "/userMain")
 		} else {
 			//send.Insert(id,username,password)
