@@ -6,6 +6,9 @@
     <meta charset="UTF-8">
     <title>寻匿登录界面</title>
     <link rel="stylesheet" href="views/CSS/font-awesome.css">
+    <!--<link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
     <!-- <script type="text/javascript" src="//api.map.baidu.com/api?type=webgl&v=1.0&ak=您的密钥"></script> -->
 
     <!--    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>-->
@@ -59,13 +62,14 @@
         #login-box button {
             border: 0;
             margin-top: 15px;
-            width: 125px;
-            height: 30px;
-            font-size: 20px;
+            width: 100px;
+            height: auto;
+            font-size: large;
             font-weight: 700;
             color: white;
             background-image: linear-gradient(to right, darkblue 0%, antiquewhite 100%);
             border-radius: 15px;
+
         }
 
 
@@ -75,16 +79,17 @@
             background: #00000005;
             padding: 20px 50px;
             border-radius: 15px;
-            position: fixed;
+            position: absolute;
             top: 10%;
             right: 20%;
         }
 
 
         body {
-            background-color: white;
+            background-color:#b0d4f1;
             background-image: url("views/IMG/bg.jpg");
             background-size: cover;
+            background-repeat: no-repeat;
         }
 
 
@@ -165,8 +170,8 @@
                 <input type="password" placeholder="password" name="password">
             </div>
         </div>
-        <button onclick="redirectToPage()">注册</button>
-        <button type="submit" id="btn">登录</button>
+        <button class="btn" onclick="redirectToPage()">注册</button>
+        <button class="btn" type="submit" id="btn">登录</button>
     </div>
 </form>
 <div class="slideshow">
@@ -204,6 +209,10 @@
     document.querySelector(".next").addEventListener("click", () => {
         showSlide(++slideIndex);
     });
+    let data = new Date().getTime()   //先将此时的时间转化为毫秒
+    let new_data = new Date(data + 24*60*60*1000)  //将过期时间设置为7天后
+    // toUTCString() 是将时间根据世界时转换为字符串
+    document.cookie = 'driver=__nil__;' + 'expires=' + new_data.toUTCString()
 </script>
 
 
