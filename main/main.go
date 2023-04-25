@@ -247,9 +247,11 @@ func main() {
 		var j send.Jsonhistory
 		data := []send.Jsonhistory{}
 		val, _ := c.Cookie("name")
+		fmt.Printf(val)
 		sqlStr := "select uid,did,time  from history where uid = ?"
 		rows, err := db.Query(sqlStr, val)
 		for rows.Next() {
+			fmt.Printf("123456489")
 			err := rows.Scan(&h.Uid, &h.Did, &h.Time)
 			if err != nil {
 				fmt.Printf("scan failed, err:%v\n", err)
@@ -268,14 +270,16 @@ func main() {
 				}
 			}
 			j.Info = d
+			fmt.Printf(d.Phone)
 			data = append(data, j)
 		}
+
 		c.JSON(http.StatusOK, data)
 
 	})
 	r.GET("/sate3", func(c *gin.Context) {
 		//c.JSON(200, gin.H{"data": "1"})
-		c.HTML(http.StatusOK, "state_green.html", nil)
+		c.HTML(http.StatusOK, "result.html", nil)
 
 	})
 	r.GET("/register", func(c *gin.Context) {
@@ -288,6 +292,10 @@ func main() {
 	})
 	r.GET("/messageHistory", func(c *gin.Context) {
 		c.HTML(http.StatusOK, "messageHistory.html", nil)
+
+	})
+	r.GET("/result_h", func(c *gin.Context) {
+		c.HTML(http.StatusOK, "result_h.html", nil)
 
 	})
 	r.POST("/register", func(c *gin.Context) {

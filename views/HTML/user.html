@@ -2,12 +2,18 @@
 <html>
 <head>
     <link rel="stylesheet" href="views/CSS/font-awesome.css">
-    <title>用户界面示例</title>
+    <link rel="stylesheet" href="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <title>用户界面</title>
     <style>
         /* 在这里添加CSS样式 */
         body {
             font-family: Arial, sans-serif;
+            background-image: url("views/IMG/userBG.jpg");
+            background-size: cover;
         }
+
         span {
             color: white;
             font-family: 楷体;
@@ -23,45 +29,31 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 50%;
+
         }
 
         .right-column {
             display: flex;
             flex-direction: column;
             align-items: center;
-            width: 50%;
+
         }
 
         .module {
             width: 80%;
             margin: 1%;
             padding: 1%;
-            border: 1px solid #ccc;
+            height: auto;
+            border: none;
             text-align: center;
-        }
-
-        .user-info {
-            position: absolute;
-            right: 0%;
-            width: 10%;
-        }
-
-        .user-info-details {
-            display: none;
-            position: relative;
-            left: -60%;
-            top: 100%;
-            width: 150%;
-            background-color: #fff;
             border-radius: 15px;
+            position: relative;
         }
 
         .map-image {
-            width: 100%;
-            height: 100%;
             cursor: pointer;
             border-radius: 15px;
+            opacity: 75%;
         }
 
         .map-module {
@@ -103,54 +95,138 @@
             transform: translate(-50%, -50%);
         }
 
-
         /*此处开始信息反馈历史记录模块*/
         .massageTracer {
             border-radius: 10px;
-            background-image: linear-gradient(to left,deepskyblue 0%,hotpink 100%);
+            background-image: linear-gradient(to left, rebeccapurple 0%, royalblue 100%);
+            font-size: x-large;
+            font-family: 华文楷体;
+            margin-top: 5%;
         }
+
         /*此处开始聊天室模块*/
-        .talkRoom{
+        .talkRoom {
             position: relative;
             top: 30%;
         }
+
+        iframe {
+            overflow: hidden;
+            width: 100%;
+            border-radius: 13px;
+            border: none;
+        }
+
+        /*此处开始user模块*/
+        .user-info {
+            position: fixed;
+            right: 0%;
+            width: 10%;
+            top: 0;
+            color: whitesmoke;
+            font-size: large;
+        }
+
+        .user-info-details {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            width: auto;
+            min-width: 150px;
+            border-radius: 15px;
+            padding: 10px; /* 添加内边距 */
+            background-color: #00000050;
+        }
+        .user-info button {
+            border-radius: 5px;
+            border: none;
+            background-color: rebeccapurple;
+        }
+        /*痛苦之媒体查询*/
+        @media (orientation: landscape) {
+            .left-column,
+            .right-column {
+                width: 50%;
+                margin-top: 10%;
+            }
+        }
+
+        @media (orientation: portrait) or (max-width: 767px) {
+            .left-column,
+            .right-column {
+                width: 100%;
+                margin-top: 10%;
+            }
+
+            .right-column {
+                margin-top: 0;
+            }
+        }
+
+        /*关键是不知道在手机上好不好用*/
     </style>
 </head>
 <body>
 <div class="container">
-
-    <div class="left-column">
-        <div class="map-module" onclick="showMap()">
-            <img class="map-image" src="views/IMG/map.png" alt="地图">
-            <div class="overlay"></div>
-            <span>点我绘制行程</span>
+    <div class="row">
+        <div class="col-sm-12 col-md-6 left-column">
+            <div class="map-module btn-block" onclick="showMap()">
+                <img class="map-image img-responsive" src="views/IMG/map.png" alt="地图">
+                <div class="overlay"></div>
+                <span>点我绘制行程</span>
+            </div>
+            <div class="btn massageTracer module " onclick="showMessageHistory()">
+                <span>点我查看自己曾查询过的司机师傅</span>
+            </div>
         </div>
-        <div class="massageTracer module" onclick="showMessageHistory()">
-            <span>点我查看自己曾查询过的信息</span>
-            <!-- 在这里添加信息反馈历史记录的内容 -->
+        <div class="col-sm-12 col-md-6 right-column">
+            <div class="module talkRoom">
+                <iframe id="content" src="/chat"></iframe>
+            </div>
         </div>
-    </div>
-    <div class="right-column">
-        <div class="module talkRoom">
-            <h2>聊天室模块</h2>
-            <button onclick="showChat()">点击进入聊天室</button>
-        </div>
-    </div>
-    <div class="user-info">
-        <i class="fa fa-user-circle" aria-hidden="true"></i>
-        <span><a href="#" onclick="toggleUserInfo()">张三</a></span>
-        <div class="module user-info-details">
-            <p>name:张三</p>
-            <p>Phone:159****1212</p>
-            <button onclick="logOut()">logOut</button>
+        <div class="user-info">
+            <div class="btn" onclick="toggleUserInfo()" style="font-size: x-large">
+            <i class="fa fa-user-circle" aria-hidden="true"></i>
+            <i id="userNameBig">张三</i>
+            </div>
+            <div class="module user-info-details">
+                <p id="userName">name:张三</p>
+                <p id="userPhone">Phone:159****1212</p>
+                <button class="btn" onclick="logOut()">logOut</button>
+            </div>
         </div>
     </div>
 </div>
 
 <script>
     // 在这里添加JavaScript代码
+    function setUserINfo() {
+        let data = document.cookie.split(';');
+        let userName = getCookie("username");
+        let phoneNumber = getCookie("phone");
+        console.log(userName, phoneNumber);
+        let p1 = phoneNumber[0] + phoneNumber[1] + phoneNumber[2];
+        let p2 = phoneNumber[7] + phoneNumber[8] + phoneNumber[9] + phoneNumber[10];
+        document.getElementById('userName').innerHTML = userName;
+        document.getElementById('userNameBig').innerHTML = userName;
+        document.getElementById('userPhone').innerHTML = p1 + "****" + p2;
+    }
+
+    function getCookie(cname) {
+        let name = cname + "=";
+        let ca = document.cookie.split(';');
+        for (let i = 0; i < ca.length; i++) {
+            let c = ca[i].trim();
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
     function toggleUserInfo() {
-        var details = document.querySelector(".user-info-details");
+        let details = document.querySelector(".user-info-details");
         if (details.style.display === "block") {
             details.style.display = "none";
         } else {
@@ -165,14 +241,25 @@
     function showChat() {
         alert("进入聊天室");
     }
-    function logOut(){
-        if(confirm("确定登出？")){
-            window.location.href='/login';
+
+    function logOut() {
+        if (confirm("确定登出？")) {
+            window.location.href = '/login';
         }
     }
-    function showMessageHistory(){
-        window.location.href='/messageHistory'
+
+    function showMessageHistory() {
+        window.location.href = '/messageHistory'
     }
+</script>
+
+
+<script>
+    setUserINfo();
+    let leftColumn = document.querySelector('.left-column');
+    let iframe = document.querySelector('#content');
+    iframe.style.height = leftColumn.offsetHeight + 'px';
+
 </script>
 </body>
 </html>

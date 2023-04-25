@@ -1,0 +1,200 @@
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
+    <meta name="csrf-token" content="vXqNKnW2bbvLKBhahgFJNeE4f6ZkUNOzjRP0PGb1">
+    <link rel="stylesheet" href="views/CSS/font-awesome.css">
+
+    <title>
+        司机信息
+    </title>
+    <script src="https://apps.bdimg.com/libs/jquery/2.1.4/jquery.min.js"></script>
+
+
+
+    <style>
+        @keyframes myfirst {
+            from {
+                filter: hue-rotate(0deg)
+            }
+            to {
+                filter: hue-rotate(40deg)
+            }
+        }
+
+        body {
+            background-image: linear-gradient(to top, antiquewhite 0%, lightskyblue 100%);
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+
+        #infoBox {
+            width: 45%;
+            height: auto;
+            margin: 0 auto;
+            margin-top: 5%;
+            text-align: center;
+            background: #00000099;
+            padding: 20px 50px;
+            color: antiquewhite;
+            font-family: 楷体;
+            border-radius: 15px;
+            font-size: large;
+            font-weight: bold;
+        }
+
+        #infoBox .Tittle {
+            color: lightskyblue;
+            font-size: x-large;
+            font-family: 华文楷体;
+            font-weight: bold;
+        }
+
+        #infoBox button {
+            border: 0;
+            margin-top: 15px;
+            width: 125px;
+            height: 30px;
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            background-image: linear-gradient(to right, antiquewhite 0%, lightskyblue 100%);
+            border-radius: 15px;
+            font-family: "微软雅黑 Light";
+
+        }
+
+        @keyframes fall {
+            0% {
+                transform: translateY(-100%);
+            }
+
+            100% {
+                transform: translateY(calc(89vh + 100%));
+            }
+        }
+
+        .binary {
+            position: absolute;
+            font-family: monospace;
+            color: lightskyblue;
+            font-size: 20px;
+            animation: fall 10s linear infinite;
+        }
+
+        video {
+            position: fixed;
+            right: 0;
+            bottom: 0;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            z-index: -100;
+            background-size: cover;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            opacity: 0.5; /* 调整透明度 */
+            z-index: -50;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<video autoplay muted loop id="myVideo">
+    <source src="views/IMG/rain.mp4" type="video/mp4">
+
+</video>
+<div class="overlay"></div>
+
+<div id="infoBox">
+    <button class='btn' onclick="Copy()">一键拷贝</button>
+    <button class="btn" onclick="Driver()">与司机聊天</button>
+    <p class="Tittle">你所寻找的师傅可能的信息如下：</p>
+
+</div>
+<script>
+    function generateInfoBlock(number, carID, phoneID, nameID) {
+        phoneID=phoneID[0]+phoneID[1]+phoneID[2]+"****"+phoneID[7]+phoneID[8]+phoneID[9]+phoneID[10];
+        carID=carID[0]+carID[1]+"***"+carID[5];
+        return `
+        <div>
+            <span class="Tittle">师傅${number}<br></span>
+            <span>车牌号为：${carID}<br></span>
+
+
+
+            <span>名称：${nameID}<br><br></span>
+
+        </div>
+    `;
+    }
+</script>
+<script>
+    // 获取URL中的查询字符串
+    let queryString = window.location.search;
+    // 使用URLSearchParams API解析查询字符串
+    let urlParams = new URLSearchParams(queryString);
+    // 获取名为"info"的查询参数的值
+    let info = urlParams.get("info");
+    // 在控制台中打印查询参数的值
+    console.log(info);
+    let data=JSON.parse(info);
+    let newData=data['info'];
+    let timeData=data['time'];
+    //for (let i = 1; i <= parseInt(newData['length']); i++) {
+    //    document.getElementById("infoBox").innerHTML += generateInfoBlock(i, newData["data" + i.toString()]["ID"], newData["data" + i.toString()]["phone"], newData["data" + i.toString()]["taxiDriver"]);
+    //}
+    let i =1;
+    document.getElementById("infoBox").innerHTML += generateInfoBlock(i, newData["id"],newData["phone"],newData["name"]);
+    document.getElementById("infoBox").innerHTML+="查询时间："+timeData;
+</script>
+
+
+<script>
+    function Copy() {
+        navigator.clipboard.writeText(JSON.stringify(info)).then(
+            () => {
+                console.log("粘贴文本成功");
+            },
+            () => {
+                console.log("clipboard write failed");
+            }
+        );
+    }
+    function Driver(){
+        $.ajax({
+            type: "POST",
+            url: '/result_h',
+            dataType: 'JSON',
+            data:newData['id'],
+            success: function () {
+
+            }
+        });
+        let date= new Date().getTime()   //先将此时的时间转化为毫秒
+        let new_date = new Date(date + 24*60*60*1000)  //将过期时间设置为7天后
+        // toUTCString() 是将时间根据世界时转换为字符串
+        document.cookie = 'driver='+newData['name']+';' + 'expires=' + new_date.toUTCString()
+        window.location.href='/userMain';
+    }
+
+</script>
+</body>
+
+</html>
+
+
+
