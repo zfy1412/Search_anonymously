@@ -6,7 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
     <meta name="csrf-token" content="vXqNKnW2bbvLKBhahgFJNeE4f6ZkUNOzjRP0PGb1">
     <link rel="stylesheet" href="views/CSS/font-awesome.css">
-
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
     <title>
         司机信息
     </title>
@@ -125,6 +125,8 @@
 </div>
 <script>
     function generateInfoBlock(number, carID, phoneID, nameID) {
+        carID = carID[0] + carID[1] + "***" + carID[5];
+        phoneID = phoneID[0] + phoneID[1] + phoneID[2] + "****" + phoneID[7] + phoneID[8] + phoneID[9] + phoneID[10];
         return `
         <div>
             <span class="Tittle">师傅${number}<br></span>
@@ -143,31 +145,33 @@
 
 
 <script>
-    function createBinary() {
-        let binary = document.createElement('div');
-        binary.classList.add('binary');
-        binary.innerText = Math.round(Math.random());
-        let tmp;
-        while (1) {
-            tmp = Math.random() * window.innerWidth;
-            if (tmp < window.innerWidth * 0.26 || tmp > window.innerWidth * 0.74)
-                break;
-        }
-        binary.style.left = tmp + 'px';
+    // function createBinary() {
+    //     let binary = document.createElement('div');
+    //     binary.classList.add('binary');
+    //     binary.innerText = Math.round(Math.random());
+    //     let tmp;
+    //     while (1) {
+    //         tmp = Math.random() * window.innerWidth;
+    //         if (tmp < window.innerWidth * 0.26 || tmp > window.innerWidth * 0.74)
+    //             break;
+    //     }
+    //     binary.style.left = tmp + 'px';
+    //
+    //     binary.style.top = -Math.random() * window.innerHeight + 'px';
+    //     binary.style.animationDuration = Math.random() * 5 + 5 + 's';
+    //     document.body.appendChild(binary);
+    //
+    //     setTimeout(() => {
+    //         binary.remove();
+    //         createBinary();
+    //     }, (parseFloat(binary.style.animationDuration) * 1000));
+    // }
+    //
+    // for (let i = 0; i < 0; i++) {
+    //     createBinary();
+    // }
+    //}
 
-        binary.style.top = -Math.random() * window.innerHeight + 'px';
-        binary.style.animationDuration = Math.random() * 5 + 5 + 's';
-        document.body.appendChild(binary);
-
-        setTimeout(() => {
-            binary.remove();
-            createBinary();
-        }, (parseFloat(binary.style.animationDuration) * 1000));
-    }
-
-    for (let i = 0; i < 0; i++) {
-        createBinary();
-    }
     let stringData;
     let newData;
     $.ajax({
@@ -181,12 +185,28 @@
             newData = res;
             stringData = JSON.stringify(newData);
             console.log(stringData);
+            let infoContainer = document.getElementById("infoBox")
             for (let i = 1; i <= parseInt(newData['length']); i++) {
-                document.getElementById("infoBox").innerHTML += generateInfoBlock(i, newData["data" + i.toString()]["ID"], newData["data" + i.toString()]["phone"], newData["data" + i.toString()]["taxiDriver"]);
+                let callHim = document.createElement("button");
+                callHim.addEventListener("click", function () {
+                    console.log("11")
+                    let date = new Date().getTime()   //先将此时的时间转化为毫秒
+                    let new_date = new Date(date + 24 * 60 * 60 * 1000)  //将过期时间设置为7天后
+                    // toUTCString() 是将时间根据世界时转换为字符串
+                    document.cookie = 'driver=' + newData["data" + i.toString()]['taxiDriver'] + ';' + 'expires=' + new_date.toUTCString()
+                    window.location.href = '/userMain';
+                });
+
+                callHim.innerHTML = "和ta聊天";
+                document.body.appendChild(callHim);
+                infoContainer.appendChild(callHim);
+                let info
+                document.getElementById("infoBox").insertAdjacentHTML('beforeend', generateInfoBlock(i, newData["data" + i.toString()]["ID"], newData["data" + i.toString()]["phone"], newData["data" + i.toString()]["taxiDriver"]));
             }
 
         }
     })
+
 
     function Copy() {
         navigator.clipboard.writeText(stringData).then(
